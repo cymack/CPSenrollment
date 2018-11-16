@@ -6,13 +6,22 @@ output: github_document
  
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE, messages = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r }
+This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2016--2017, and will be periodically updated.
+
+A glimpse of the data:
+```{r include =  F, warnings = FALSE}
 library(tidyverse)
 library(ggplot2)
+```
+```{r echo = F}
 enrollment <- read_rds("./enrollment_all_hs.Rds")
 enrollment %>% glimpse()
 ```
+
+# Notes
+The original CPS data are available in a series of spreadsheets at [CPS website.](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)^[Membership data are under the heading "Demographics."]
+Downloadable data files that I have prepared are in this repository with Rds and csv extensions. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.

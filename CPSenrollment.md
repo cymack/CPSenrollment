@@ -3,26 +3,9 @@ A CPS Enrollment Dataset
 Charlotte Mack
 November 16, 2018
 
-``` r
-library(tidyverse)
-```
+This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2016--2017, and will be periodically updated.
 
-    ## ── Attaching packages ─────────────────────────── tidyverse 1.2.1 ──
-
-    ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
-    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
-    ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
-    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-
-    ## ── Conflicts ────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
-library(ggplot2)
-enrollment <- read_rds("./enrollment_all_hs.Rds")
-enrollment %>% glimpse()
-```
+A glimpse of the data:
 
     ## Observations: 1,914
     ## Variables: 10
@@ -36,3 +19,10 @@ enrollment %>% glimpse()
     ## $ g10         <int> 119, 438, NA, NA, 504, 419, 331, 945, 546, 254, 30...
     ## $ g11         <int> 50, 361, 367, 107, 380, 371, 291, 1230, 403, NA, 2...
     ## $ g12         <int> NA, 266, 213, 116, 248, 394, 304, 1000, 409, NA, 2...
+
+Notes
+=====
+
+The original CPS data are available in a series of spreadsheets at [CPS website.](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)[1] Downloadable data files that I have prepared are in this repository with Rds and csv extensions. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.
+
+[1] Membership data are under the heading "Demographics."

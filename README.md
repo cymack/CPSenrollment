@@ -20,3 +20,5 @@ $ g12         <int> NA, 266, 213, 116, 248, 394, 304, 1...
 # Notes
 The original CPS data are available in a series of spreadsheets at [CPS website](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)^[Membership data are under the heading "Demographics."]
 Downloadable data files that I have prepared are in this repository with Rds and csv extensions. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.
+
+A more detailed overview is in the file CPSenrollment.md.
