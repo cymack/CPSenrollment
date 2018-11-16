@@ -3,30 +3,36 @@ A CPS Enrollment Dataset
 Charlotte Mack
 November 16, 2018
 
-R Markdown
-----------
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
 ``` r
-summary(cars)
+library(tidyverse)
 ```
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+    ## ── Attaching packages ─────────────────────────── tidyverse 1.2.1 ──
 
-Including Plots
----------------
+    ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
+    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
+    ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
+    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-You can also embed plots, for example:
+    ## ── Conflicts ────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
 
-![](CPSenrollment_files/figure-markdown_github/pressure-1.png)
+``` r
+library(ggplot2)
+enrollment <- read_rds("./enrollment_all_hs.Rds")
+enrollment %>% glimpse()
+```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+    ## Observations: 1,914
+    ## Variables: 10
+    ## $ govern      <fct> regular, regular, regular, regular, regular, regul...
+    ## $ school_id   <int> 610245, 609695, 609696, 610402, 609708, 609716, 60...
+    ## $ common_name <chr> "Douglass HS", "Amundsen HS", "Austin HS", "DeVry ...
+    ## $ year        <dbl> 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006, 20...
+    ## $ total       <int> 737, 1500, 580, 223, 1738, 1694, 1439, 4278, 1936,...
+    ## $ total_hs    <dbl> 384, 1500, 580, 223, 1738, 1694, 1439, 4278, 1936,...
+    ## $ g09         <int> 215, 435, NA, NA, 606, 510, 513, 1103, 578, 254, 2...
+    ## $ g10         <int> 119, 438, NA, NA, 504, 419, 331, 945, 546, 254, 30...
+    ## $ g11         <int> 50, 361, 367, 107, 380, 371, 291, 1230, 403, NA, 2...
+    ## $ g12         <int> NA, 266, 213, 116, 248, 394, 304, 1000, 409, NA, 2...
