@@ -25,11 +25,11 @@ A glimpse of the data:
     ## $ g11         <int> 50, 361, 367, 107, 380, 371, 291, 1230, 403, NA, 2...
     ## $ g12         <int> NA, 266, 213, 116, 248, 394, 304, 1000, 409, NA, 2...
 
-Notes
-=====
+The original CPS data are available in a series of spreadsheets at [CPS website](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)[1] Downloadable data files that I have prepared are in this repository with Rds and csv extensions, downloadable through the links below. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.
 
-The original CPS data are available in a series of spreadsheets at [CPS website](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)[1] Downloadable data files that I have prepared are in this repository with Rds and csv extensions. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.
+[Rds file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.Rds)
+[csv file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
 
-A more detailed overview is in the file CPSenrollment.md.
+A more detailed overview of the data is in the file CPSenrollment.md.
 
 [1] Membership data are under the heading "Demographics."

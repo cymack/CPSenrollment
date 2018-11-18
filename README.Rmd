@@ -23,8 +23,12 @@ A glimpse of the data:
 enrollment_hs <- read_rds("./enrollment_all_hs.Rds")
 enrollment_hs %>% glimpse()
 ```
-# Notes
-The original CPS data are available in a series of spreadsheets at [CPS website ](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)^[Membership data are under the heading "Demographics."]
-Downloadable data files that I have prepared are in this repository with Rds and csv extensions. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.
 
-A more detailed overview is in the file CPSenrollment.md.
+The original CPS data are available in a series of spreadsheets at [CPS website ](http://www.cps.edu/SchoolData/Pages/SchoolData.aspx)^[Membership data are under the heading "Demographics."]
+Downloadable data files that I have prepared are in this repository with Rds and csv extensions, downloadable through the links below. The Rds files, which are used in R language programming, may have some type designations that are not in the csv files, but there should be no other difference.
+
+[Rds file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.Rds)   
+[csv file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
+
+
+A more detailed overview of the data is in the file CPSenrollment.md.
