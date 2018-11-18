@@ -30,6 +30,6 @@ The original CPS data are available in a series of spreadsheets at [CPS website]
 [Rds file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.Rds)
 [csv file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
 
-A more detailed overview of the data is in the file CPSenrollment.md.
+A more detailed overview of the data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv).
 
 [1] Membership data are under the heading "Demographics."
