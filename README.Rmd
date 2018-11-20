@@ -31,4 +31,4 @@ Downloadable data files that I have prepared are in this repository with Rds and
 [csv file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
 
 
-A more detailed overview of the data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv).
+A more detailed overview of the data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/CPSenrollment.md).
