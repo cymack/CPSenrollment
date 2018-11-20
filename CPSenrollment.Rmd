@@ -9,10 +9,11 @@ output: github_document
 ```{r setup, echo=FALSE, messages = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+NB: This document is under construction! Comments are welcome.
 
-This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2016--2017, and will be periodically updated.
+This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2017--2018, and will be periodically updated.
 
-A glimpse of the data:
+A glimpse of the high schools data:
 ```{r include =  F, warnings = FALSE}
 library(tidyverse)
 library(ggplot2)
@@ -20,6 +21,103 @@ library(ggplot2)
 ```{r echo = F}
 enrollment <- read_rds("./enrollment_all_hs.Rds")
 enrollment %>% glimpse()
+```
+
+Visualization of the structure, using DataExplorer package:
+```{r plotstr, echo = T}
+library(DataExplorer)
+plot_str(enrollment)
+```
+
+Number of schools represented in the data:
+`r length(unique(enrollment$school_id))`
+
+
+Number of schools for which there are data for all years in the period:
+```{r complete, echo = F}
+# 86 through 2017--2018
+enrollment %>% 
+    group_by(school_id) %>% 
+    count() %>% 
+    filter(n == 12) %>% 
+    nrow()
+```
+
+Aggregate numbers of missing observations, by grade:
+```{r missing_grade, echo = F}
+enrollment %>% 
+    select(7:10) %>% 
+    profile_missing() %>% 
+    ggplot(aes(x = fct_inorder(feature), y = num_missing)) +
+    geom_bar(stat = "identity") + 
+    labs(xlab = "Number missing observations",
+         ylab = "High School grade") +
+    coord_flip()
+```
+
+Missing grade observations by year, counts:
+```{r _miss variables, include = F}
+enrollment <- enrollment %>% 
+    mutate_at(vars(g09:g12), funs(miss = is.na(.)))
+
+missing_by_yr <- enrollment %>% 
+    select(year, g09_miss:g12_miss) %>% 
+    group_by(year) %>% 
+    summarize_at(vars(g09_miss:g12_miss), 
+                 funs(sum(.)))
+
+```
+
+```{r _miss by year, echo = F}
+missing_by_yr %>% 
+    gather(key = feature, value = n, -year) %>% 
+    ggplot(aes(x = fct_inorder(feature), y = n)) +
+    geom_bar(stat = "identity") + 
+    coord_flip() +
+    facet_wrap(~year)
+
+```
+```{r _miss shares, include = F}
+hs_by_yr <- enrollment %>%
+    select(year, school_id) %>% 
+    group_by(year) %>% 
+    count()
+missing_by_yr <- 
+    cbind(missing_by_yr, hs_by_yr$n) %>% 
+    rename(n_hs = `hs_by_yr$n`)
+
+missing_by_yr <- missing_by_yr %>% 
+    mutate_at(vars(g09_miss:g12_miss), 
+              funs(share = ./n_hs))
+
+```
+
+Missing grade observations by year, as a fraction of all for that year:
+```{r _miss shares by year, echo = F}
+missing_by_yr %>% 
+    select(year, g09_miss_share:g12_miss_share) %>% 
+    gather(key = feature, value = n, -year) %>% 
+    ggplot(aes(x = fct_inorder(feature), y = n)) +
+    geom_bar(stat = "identity") + 
+    coord_flip() + 
+    facet_wrap(~year)
+
+```
+
+Boxplot overview of high school enrollment distribution by year:
+```{r boxplot, message = F, warning = F, echo = F}
+library(ggthemes)
+enrollment %>% 
+  ggplot(aes(x=as.factor(year), y=total_hs)) + 
+  theme_tufte(ticks=F) + 
+  geom_tufteboxplot(median.type = "line", 
+                    whisker.type = "line", 
+                    hoffset = 0, 
+                    width = 3) + 
+  labs(title = "Annual CPS High School Enrollment Distributions", 
+       x ="Year", 
+       y ="Total High School Enrollment per School") + 
+  coord_flip()
 ```
 
 # Notes

@@ -3,9 +3,11 @@ A CPS Enrollment Dataset
 Charlotte Mack
 November 16, 2018
 
-This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2016--2017, and will be periodically updated.
+NB: This document is under construction! Comments are welcome.
 
-A glimpse of the data:
+This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2017--2018, and will be periodically updated.
+
+A glimpse of the high schools data:
 
     ## Observations: 1,914
     ## Variables: 10
@@ -19,6 +21,29 @@ A glimpse of the data:
     ## $ g10         <int> 119, 438, NA, NA, 504, 419, 331, 945, 546, 254, 30...
     ## $ g11         <int> 50, 361, 367, 107, 380, 371, 291, 1230, 403, NA, 2...
     ## $ g12         <int> NA, 266, 213, 116, 248, 394, 304, 1000, 409, NA, 2...
+
+Visualization of the structure, using DataExplorer package:
+
+``` r
+library(DataExplorer)
+plot_str(enrollment)
+```
+
+Number of schools represented in the data: 247
+
+Number of schools for which there are data for all years in the period:
+
+    ## [1] 86
+
+Aggregate numbers of missing observations, by grade: ![](CPSenrollment_files/figure-markdown_github/missing_grade-1.png)
+
+Missing grade observations by year, counts:
+
+![](CPSenrollment_files/figure-markdown_github/_miss%20by%20year-1.png)
+
+Missing grade observations by year, as a fraction of all for that year: ![](CPSenrollment_files/figure-markdown_github/_miss%20shares%20by%20year-1.png)
+
+Boxplot overview of high school enrollment distribution by year: ![](CPSenrollment_files/figure-markdown_github/boxplot-1.png)
 
 Notes
 =====
