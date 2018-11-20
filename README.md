@@ -1,7 +1,7 @@
 Introducing CPS Enrollment Datasets
 ================
 Charlotte Mack
-2018-11-18
+2018-11-20
 
 CPSenrollment
 =============
@@ -10,7 +10,7 @@ Exploring enrollment data from the Chicago Public Schools
 
 This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2016--2017, and will be periodically updated.
 
-A glimpse of the data:
+A glimpse of the high schools data:
 
     ## Observations: 1,914
     ## Variables: 10
@@ -30,6 +30,6 @@ The original CPS data are available in a series of spreadsheets at [CPS website]
 [Rds file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.Rds)
 [csv file for all CPS high schools, September 2006 to September 2016](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
 
-A more detailed overview of the data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv).
+A more detailed overview of the data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/CPSenrollment.md).
 
 [1] Membership data are under the heading "Demographics."
