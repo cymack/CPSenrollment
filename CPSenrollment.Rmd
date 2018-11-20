@@ -6,7 +6,7 @@ output: github_document
  
 ---
 
-```{r setup, echo=FALSE, messages = FALSE}
+```{r setup, echo=FALSE, messages = FALSE, warning = F}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 NB: This document is under construction! Comments are welcome.
