@@ -45,13 +45,16 @@ enrollment %>%
 
 Aggregate numbers of missing observations, by grade:
 ```{r missing_grade, echo = F}
+library(ggthemes)
 enrollment %>% 
     select(7:10) %>% 
     profile_missing() %>% 
     ggplot(aes(x = fct_inorder(feature), y = num_missing)) +
-    geom_bar(stat = "identity") + 
-    labs(xlab = "Number missing observations",
-         ylab = "High School grade") +
+    geom_bar(stat = "identity", width = .5) + 
+    labs(y = "Number",
+         x = "Grade") +
+    ggtitle("Missing observations by grade, all years") +
+    theme_tufte() +
     coord_flip()
 ```
 
@@ -71,8 +74,13 @@ missing_by_yr <- enrollment %>%
 ```{r _miss by year, echo = F}
 missing_by_yr %>% 
     gather(key = feature, value = n, -year) %>% 
+    mutate(feature = str_remove(feature, "_miss")) %>%
     ggplot(aes(x = fct_inorder(feature), y = n)) +
-    geom_bar(stat = "identity") + 
+    geom_bar(stat = "identity", width = .5) + 
+    labs(y = "Number",
+         x = "Grade") +
+    ggtitle("Missing observations by grade and year") +
+    theme_tufte() +
     coord_flip() +
     facet_wrap(~year)
 
@@ -97,9 +105,14 @@ Missing grade observations by year, as a fraction of all for that year:
 missing_by_yr %>% 
     select(year, g09_miss_share:g12_miss_share) %>% 
     gather(key = feature, value = n, -year) %>% 
+    mutate(feature = str_remove(feature, "_miss_share")) %>%
     ggplot(aes(x = fct_inorder(feature), y = n)) +
-    geom_bar(stat = "identity") + 
-    coord_flip() + 
+    geom_bar(stat = "identity", width = .5) + 
+    labs(y = "Fraction",
+         x = "Grade") +
+    ggtitle("Fraction of observations missing by grade and year") +
+    theme_tufte(ticks = T) +
+    coord_flip() +
     facet_wrap(~year)
 
 ```
