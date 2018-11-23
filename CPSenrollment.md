@@ -45,6 +45,8 @@ Missing grade observations by year, counts:
 
 Missing grade observations by year, as a fraction of all for that year: ![](CPSenrollment_files/figure-markdown_github/_miss%20shares%20by%20year-1.png)
 
+Of 270 incomplete records occuring in 2006 through 2012, 55 records or 20 percent of the subset are provided by schools in a particular track of the CPS, called Academic Achievement High Schools. These were smaller institutions about which more information would be desirable. In general they only enrolled students in grades 9 and 10, though Chicago Vocational AA, Tilden AA, and Crane AA had instances of grade 11 or 12 enrollment. The program was apparently discontinued after the 2012--2013 school year.
+
 Boxplot overview of high school enrollment distribution by year: ![](CPSenrollment_files/figure-markdown_github/boxplot-1.png)
 
 Notes

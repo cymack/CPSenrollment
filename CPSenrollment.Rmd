@@ -56,7 +56,7 @@ enrollment %>%
     labs(y = "Number",
          x = "Grade") +
     ggtitle("Missing observations by grade, all years") +
-    theme_tufte() +
+    ggthemes::theme_tufte() +
     coord_flip()
 ```
 
@@ -113,9 +113,19 @@ missing_by_yr %>%
     labs(y = "Fraction",
          x = "Grade") +
     ggtitle("Fraction of observations missing by grade and year") +
-    theme_tufte(ticks = T) +
+    ggthemes::theme_tufte(ticks = T) +
     coord_flip() +
     facet_wrap(~year)
+
+```
+
+Of 270 incomplete records occuring in 2006 through 2012, 55 records or 20 percent of the subset are provided by schools in a particular track of the CPS, called Academic Achievement High Schools. These were smaller institutions about which more information would be desirable. In general they only enrolled students in grades 9 and 10, though Chicago Vocational AA, Tilden AA, and Crane AA had instances of grade 11 or 12 enrollment. The program was apparently discontinued after the 2012--2013 school year.
+
+```{r incomplete and aa, include = F}
+incomplete <- enrollment[!complete.cases(enrollment),]
+
+# Extra filter below to remove AASTA-Orr (2006--2008), which has complete records and which might not be an AA school; should check on this somehow.
+AA <- enrollment[str_detect(enrollment$common_name, "AA"),] %>% filter(school_id != 610303)
 
 ```
 
@@ -124,8 +134,8 @@ Boxplot overview of high school enrollment distribution by year:
 library(ggthemes)
 enrollment %>% 
   ggplot(aes(x=as.factor(year), y=total_hs)) + 
-  theme_tufte(ticks=F) + 
-  geom_tufteboxplot(median.type = "line", 
+  ggthemes::theme_tufte(ticks=F) + 
+  ggthemes::geom_tufteboxplot(median.type = "line", 
                     whisker.type = "line", 
                     hoffset = 0, 
                     width = 3) + 
