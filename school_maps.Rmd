@@ -1,0 +1,90 @@
+---
+title: "School Locations, 2006 and 2016"
+author: "Charlotte Mack"
+date: "`r format(Sys.Date())`"
+output: github_document 
+---
+
+We use maps to show changes in distribution of regular district, charter district, and other types of high schools in the Chicago Public School district between 2006 and 2016.
+
+```{r libraries, message=F, include=FALSE}
+library(tidyverse)
+library(tigris)
+```
+
+```{r data, message=FALSE, warning=F, include=FALSE}
+# Data files:
+school_loc_merged.2006 <- read_rds("school_loc_merged.2006.Rds")
+school_loc_merged.2016 <- read_rds("school_loc_merged.2016.Rds")
+districts <- tigris::school_districts("Illinois", class = "sf", refresh = TRUE)
+```
+
+```{r cleaning, include=FALSE}
+# Low-population factor levels collapsed using a forcats package command:
+school_loc_merged.2006 <- 
+    school_loc_merged.2006 %>% 
+    mutate(sch_type = 
+               fct_collapse(sch_type, 
+                            District = "District", 
+                            Charter = "Charter", 
+                            Other = c("ALOP", "Safe", "Contract")))
+
+school_loc_merged.2016 <- 
+    school_loc_merged.2016 %>% 
+    mutate(sch_type = 
+               fct_collapse(sch_type, 
+                            District = "District", 
+                            Charter = "Charter", 
+                            Other = c("ALOP", "Safe", "Contract")))
+
+school_loc_merged.2006 <- 
+    school_loc_merged.2006 %>% 
+    mutate(sch_type = fct_infreq(sch_type))
+school_loc_merged.2016 <- 
+    school_loc_merged.2016 %>% 
+    mutate(sch_type = fct_infreq(sch_type))
+
+```
+
+```{r lmapper function, include=FALSE}
+lmapper <- function(ldf, syear) {ggplot(data = 
+           districts %>% 
+           filter(str_detect(NAME, "Chicago Public"))) +
+    geom_sf(fill = "light green", 
+            alpha = .1) + 
+    geom_point(data = ldf %>% 
+                   filter(grade_cat == "HS"), 
+               shape = 21, 
+               size = 3,
+               color = "black",
+               alpha = .6,
+               position = position_jitter(),
+               aes(x = x, 
+                   y = y, 
+                   fill = sch_type, 
+                   text = paste(school_nm, "<br>", "Enrollment", total_hs)
+                   )
+               ) + 
+    scale_fill_manual(values = c("darkblue", "yellow", "green4")) +
+        annotate("text", x = -87.85, y = 41.67, label = syear)
+}
+
+labs_lmap <- labs(title = "CPS High School Locations", 
+                  subtitle = "Data: City of Chicago, Chicago Public Schools, \n\tand U.S. Census Bureau", 
+                  fill = "Governance type")
+
+theme_lmap <- theme(axis.title = element_blank(), 
+                    axis.text = element_blank(), 
+                    axis.ticks = element_blank(), 
+                    legend.position = "bottom")
+
+
+```
+
+
+```{r maps, message=FALSE, warning=FALSE, fig.align = "left"}
+p1 <- lmapper(school_loc_merged.2006, "2006-07") + labs_lmap + theme_lmap
+p2 <- lmapper(school_loc_merged.2016, "2016-17") + labs_lmap + theme_lmap
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+

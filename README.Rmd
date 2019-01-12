@@ -31,8 +31,8 @@ Downloadable data files that I have prepared are in this repository with Rds and
 
 [csv file for all CPS high schools, September 2006 to September 2017](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
 
-[Rds file of high school locations as of 2014--2015 school year, with enrollments from 2016--2017 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.2016.Rds)
-
-[Rds file of high school locations as of 2014--2015 school year, with enrollments from 2006--2007 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.2006.Rds)
+Rds files of high school locations as of 2014--2015 school year, [with enrollments from 2016--2017 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.2016.Rds),  [and from 2006--2007 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.206.Rds)
 
 A more detailed overview of the all-years enrollment data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/CPSenrollment.md).
+
+[A brief article with maps of District high schools under regular and other governance for the 2006--2007 and 2016--2017 school years is in the file school_maps.md.](https://github.com/cymack/CPSenrollment/blob/master/school_maps.md)
