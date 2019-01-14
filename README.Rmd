@@ -31,8 +31,12 @@ Downloadable data files that I have prepared are in this repository with Rds and
 
 [csv file for all CPS high schools, September 2006 to September 2017](https://github.com/cymack/CPSenrollment/blob/master/enrollment_all_hs.csv)
 
-Rds files of high school locations as of 2014--2015 school year, [with enrollments from 2016--2017 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.2016.Rds),  [and from 2006--2007 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.206.Rds)
+Rds files of high school locations as of 2014--2015 school year, [with enrollments from 2016--2017 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.2016.Rds),  and from [2006--2007 school year](https://github.com/cymack/CPSenrollment/blob/master/school_loc_merged.206.Rds) These data were used to construct the school maps linked below.
 
 A more detailed overview of the all-years enrollment data is in the file [CPSenrollment.md](https://github.com/cymack/CPSenrollment/blob/master/CPSenrollment.md).
 
 [A brief article with maps of District high schools under regular and other governance for the 2006--2007 and 2016--2017 school years is in the file school_maps.md.](https://github.com/cymack/CPSenrollment/blob/master/school_maps.md)
+
+[The preparation of the data is described in data.R](https://github.com/cymack/CPSenrollment/blob/master/data.R) and [clean.R](https://github.com/cymack/CPSenrollment/blob/master/clean.R). data.R is a protocol in the form of a script of the first interactive steps that I took in preparing the unified data set. The protocol here takes the data from the original set of annual membership rosters, published in spreadsheets and having various sets and arrangements of variables, to R data.frames of uniform layout. I undertook the project when I was fairly new to R, so it is not as automated as it might be; on the other hand, each year's roster from the Chicago Public Schools has idiosyncrasies that can only be found and worked out manually. clean.R examines missing data more closely and creates a uniform set of names for each school to be used throughout the data.frame.
+
+Miscellaneous exploratory analysis, mostly in graphs is in [explore.R](https://github.com/cymack/CPSenrollment/blob/master/explore.R).
