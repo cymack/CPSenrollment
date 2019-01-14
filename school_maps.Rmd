@@ -5,21 +5,21 @@ date: "`r format(Sys.Date())`"
 output: github_document 
 ---
 
-We use maps to show changes in distribution of regular district, charter district, and other types of high schools in the Chicago Public School district between 2006 and 2016.
+We use maps to show changes in distribution of regular district, charter district, and other types of high schools in the Chicago Public School district between 2006 and 2016. The maps are ready to be used with plotly::ggplotly() to activate hover labels that show the school name and enrollment for the year displayed.
 
-```{r libraries, message=F, include=FALSE}
+```{r libraries, echo = F, message=F, include=FALSE}
 library(tidyverse)
 library(tigris)
 ```
 
-```{r data, message=FALSE, warning=F, include=FALSE}
+```{r data, echo = F, message=FALSE, warning=F, include=FALSE}
 # Data files:
 school_loc_merged.2006 <- read_rds("school_loc_merged.2006.Rds")
 school_loc_merged.2016 <- read_rds("school_loc_merged.2016.Rds")
 districts <- tigris::school_districts("Illinois", class = "sf", refresh = TRUE)
 ```
 
-```{r cleaning, include=FALSE}
+```{r cleaning, echo = F, include=FALSE}
 # Low-population factor levels collapsed using a forcats package command:
 school_loc_merged.2006 <- 
     school_loc_merged.2006 %>% 
@@ -46,7 +46,7 @@ school_loc_merged.2016 <-
 
 ```
 
-```{r lmapper function, include=FALSE}
+```{r lmapper function, echo = F, include=FALSE}
 lmapper <- function(ldf, syear) {ggplot(data = 
            districts %>% 
            filter(str_detect(NAME, "Chicago Public"))) +
@@ -82,7 +82,7 @@ theme_lmap <- theme(axis.title = element_blank(),
 ```
 
 
-```{r maps, message=FALSE, warning=FALSE, fig.align = "left"}
+```{r maps, echo = F, message=FALSE, warning=FALSE, fig.align = "left"}
 p1 <- lmapper(school_loc_merged.2006, "2006-07") + labs_lmap + theme_lmap
 p2 <- lmapper(school_loc_merged.2016, "2016-17") + labs_lmap + theme_lmap
 gridExtra::grid.arrange(p1, p2, ncol = 2)
