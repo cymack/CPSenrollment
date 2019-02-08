@@ -1,14 +1,14 @@
 Introducing CPS Enrollment Datasets
 ================
 Charlotte Mack
-2019-02-07
+February 08, 2019
 
 CPSenrollment
 =============
 
 Exploring enrollment data from the Chicago Public Schools
 
-This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2016--2017, and will be periodically updated.
+This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2018--2019, and will be periodically updated.
 
 A glimpse of the high schools data:
 
@@ -37,8 +37,10 @@ A more detailed overview of the all-years enrollment data is in the file [CPSenr
 
 [A brief article with maps of District high schools under regular and other governance for the 2006--2007 and 2016--2017 school years is in the file school\_maps.md.](https://github.com/cymack/CPSenrollment/blob/master/school_maps.md)
 
-[The preparation of the data is described in data.R](https://github.com/cymack/CPSenrollment/blob/master/data.R) and [clean.R](https://github.com/cymack/CPSenrollment/blob/master/clean.R). data.R is a protocol in the form of a script of the first interactive steps that I took in preparing the unified data set. The protocol here takes the data from the original set of annual membership rosters, published in spreadsheets and having various sets and arrangements of variables, to R data.frames of uniform layout. I undertook the project when I was fairly new to R, so it is not as automated as it might be; on the other hand, each year's roster from the Chicago Public Schools has idiosyncrasies that can only be found and worked out manually. clean.R examines missing data more closely and creates a uniform set of names for each school to be used throughout the data.frame.
+[The preparation of the data 2006-2017 is described in data.R](https://github.com/cymack/CPSenrollment/blob/master/data.R) and [clean.R](https://github.com/cymack/CPSenrollment/blob/master/clean.R). data.R is a protocol in the form of a script of the first interactive steps that I took in preparing the unified data set. The protocol here takes the data from the original set of annual membership rosters, published in spreadsheets and having various sets and arrangements of variables, to R data.frames of uniform layout. I undertook the project when I was fairly new to R, so it is not as automated as it might be; on the other hand, each year's roster from the Chicago Public Schools has idiosyncrasies that can only be found and worked out manually. clean.R examines missing data more closely and creates a uniform set of names for each school to be used throughout the data.frame.
 
-Miscellaneous exploratory analysis, mostly in graphs is in [explore.R](https://github.com/cymack/CPSenrollment/blob/master/explore.R).
+[The protocol for the 2018-2019 update is in data\_2018.R](https://github.com/cymack/CPSenrollment/blob/master/data_2018.R), for those who want a more compact overview.
+
+Miscellaneous exploratory analysis, mostly in graphs is in [explorechange a subset with dplyr transmute.R](https://github.com/cymack/CPSenrollment/blob/master/explore.R).
 
 [1] Membership data are under the heading "Demographics."

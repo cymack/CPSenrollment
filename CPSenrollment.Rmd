@@ -9,6 +9,7 @@ output: github_document
 ```{r setup, echo=FALSE, messages = FALSE, warning = F}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Last updated `r format(Sys.Date(), "%B %d, %Y")`.  
 NB: This document is under construction! Comments are welcome.
 
 This repository contains exploratory analysis and visualizations of enrollment data that were extracted from Chicago Public Schools (CPS) public records. The prepared data are available at this repository in Rds and csv formats; at present there are only high school data, with elementary school data forthcoming. The sets span the school years from 2006--2007 through 2017--2018, and will be periodically updated.
@@ -23,8 +24,8 @@ enrollment <- read_rds("./enrollment_all_hs.Rds")
 enrollment %>% glimpse()
 ```
 
-Visualization of the structure, using DataExplorer package:
-```{r plotstr, echo = T}
+```{r plotstr, eval=FALSE, include=FALSE}
+# Visualization of the structure, using DataExplorer package:
 library(DataExplorer)
 plot_str(enrollment)
 ```
