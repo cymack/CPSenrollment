@@ -10,6 +10,8 @@ library(tidyverse)
 # command. If xls version is available, the same arguments can be used inside
 # readxl::read_xls().
 
+library(tidyverse)
+
 tbl.enrollment2018 <- read_csv("./Demographics_20thDay_2018.csv", 
                                skip=2, 
                                col_names = c("school_id",
@@ -43,6 +45,7 @@ tbl.enrollment2018 <- tbl.enrollment2018 %>% mutate(school_id = as.character(sch
 tbl.enrollment2018 <- tbl.enrollment2018 %>% mutate_if(is.double, as.integer)
  
 
+#
 # Create a factor variable 'grades' to indicate schools that are high schools.
 # The others will be classed as elementary schools for the moment; they are to
 # be omitted from this project. This method assigns "high school" to any school
@@ -50,6 +53,7 @@ tbl.enrollment2018 <- tbl.enrollment2018 %>% mutate_if(is.double, as.integer)
 # phasing in or out, or schools with unconventional grade offerings, are
 # included. 
 # NB: In the 2018 listing, zeros rather than NA are used by CPS for missing grades.
+# included.
 tbl.enrollment2018 <- tbl.enrollment2018 %>% 
     mutate(grades = ifelse(g09 == 0 & g10 == 0 & g11 == 0 & g12 == 0,
                            "elementary",
@@ -192,6 +196,8 @@ glimpse(tbl.enrollment2018_hs)
 # current all-school data and filtering:
 enrollment_2017 <- read_csv("enrollment_all_hs.csv") %>% 
         filter(year == 2017)
+enrollment_all_hs <- read_csv("enrollment_all_hs.csv")
+enrollment_2017 <- enrollment_all_hs %>% filter(year == 2017)
 
 # Create common_names with as many matches from 2017 as found:
 tbl.enrollment2018_hs <- tbl.enrollment2018_hs %>% 
