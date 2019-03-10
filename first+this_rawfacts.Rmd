@@ -1,0 +1,238 @@
+---
+title: "Raw Facts, 2018"
+author: "Charlotte Mack"
+date: "`r format(Sys.Date())`"
+output: github_document
+---
+
+A set of comparisons for the CPS Enrollment data, to be visualized or arranged in tables elsewhere. At date, "first" year is 2006 and "last" year is 2018.
+
+```{r options}
+options(digits = 2)
+```
+
+
+```{r libraries}
+library(tidyverse)
+```
+
+```{r data}
+enrollment_all_hs <- read_rds("./enrollment_all_hs.Rds")
+```
+
+
+```{r}
+# Filter first and this year from data
+first_last <- enrollment_all_hs %>% filter(year %in% c(2006, 2018))
+```
+
+```{r}
+# Counts of schools, total and by governance
+first_last %>% 
+    group_by(year) %>%  
+    count()
+
+first_last %>% 
+    group_by(year, govern) %>%  
+    count()
+```
+
+```{r}
+# Enrollments, total and by governance
+all <- first_last %>%  
+    group_by(year) %>%  
+    summarize(all_enrollment = sum(total_hs))
+# (Match column 2 of this into the next one, then calculate the percentages.)
+
+first_last %>%  
+    group_by(year, govern) %>%  
+    summarize(enrollment = sum(total_hs)) 
+```
+
+
+```{r}
+# Largest and smallest enrollments overall and by governance
+# 
+
+# Largest overall:
+first_last %>% 
+    filter(year == 2006) %>%  
+    arrange(desc(total_hs)) %>%  
+    select(govern, common_name, total_hs)
+
+first_last %>% 
+    filter(year == 2018) %>%  
+    arrange(desc(total_hs)) %>%  
+    select(govern, common_name, total_hs)
+    
+# Smallest overall:
+first_last %>% 
+    filter(year == 2006) %>%  
+    arrange(total_hs) %>%  
+    select(govern, common_name, total_hs)
+
+first_last %>% 
+    filter(year == 2018) %>%  
+    arrange(total_hs) %>%  
+    select(govern, common_name, total_hs)
+
+
+# Largest of regular governance:
+first_last %>% 
+    filter(year == 2006 & govern == "regular") %>%  
+    arrange(desc(total_hs)) %>%  
+    select(govern, common_name, total_hs)
+
+first_last %>% 
+    filter(year == 2018 & govern == "regular") %>%  
+    arrange(desc(total_hs)) %>%  
+    select(govern, common_name, total_hs)
+    
+# Smallest of regular governance:
+first_last %>% 
+    filter(year == 2006 & govern == "regular") %>%  
+    arrange(total_hs) %>%  
+    select(govern, common_name, total_hs)
+
+first_last %>% 
+    filter(year == 2018 & govern == "regular") %>%  
+    arrange(total_hs) %>%  
+    select(govern, common_name, total_hs)
+
+# Largest of charter governance:
+first_last %>% 
+    filter(year == 2006 & govern == "charter") %>%  
+    arrange(desc(total_hs)) %>%  
+    select(govern, common_name, total_hs)
+
+first_last %>% 
+    filter(year == 2018 & govern == "charter") %>%  
+    arrange(desc(total_hs)) %>%  
+    select(govern, common_name, total_hs)
+    
+# Smallest of charter governance:
+first_last %>% 
+    filter(year == 2006 & govern == "charter") %>%  
+    arrange(total_hs) %>%  
+    select(govern, common_name, total_hs)
+
+first_last %>% 
+    filter(year == 2018 & govern == "charter") %>%  
+    arrange(total_hs) %>%  
+    select(govern, common_name, total_hs)
+
+```
+
+```{r births and deaths}
+# Using anti-joins, determine which schools (by school_id) left the database
+# during the period and which ones entered:
+first <- first_last %>% filter(year == 2006)
+this <- first_last %>% filter(year == 2018)
+
+# School IDs present in 2006 but not in 2018:
+changes_f <- anti_join(first, this, by = "school_id")
+changes_f %>% glimpse()
+
+# School IDs not present in 2006 but appearing in 2018:
+changes_t <- anti_join(this, first, by = "school_id")
+changes_t %>% glimpse()
+
+```
+
+
+```{r growth numbers}
+# Form a data subset having only schools represented in both years, by id, and
+# use this to calculate enrollment changes, i.e. absolute, percent, and
+# annualized rate, over the period.
+
+deltas <- first_last %>% 
+    filter(!(school_id %in% changes_f$school_id) & 
+               !(school_id %in% changes_t$school_id)) %>% 
+    mutate(delta = ifelse(year == 2018, 
+                          total_hs - lag(total_hs, 
+                                         1, 
+                                         order_by = school_id), 
+                          NA), 
+           delta_pct_by_100 = delta/lag(total_hs, 
+                                 1, 
+                                 order_by = school_id),
+           delta_rate = ((1 + delta_pct_by_100)^(1/12)) - 1) %>% 
+    filter(year == 2018)
+
+
+
+
+# Highest growth over period:
+deltas %>%  
+    arrange(desc(delta)) %>%  
+    select(common_name, total_hs, delta) %>%  
+    head(10)
+
+# Greatest decline over period:
+deltas %>%  
+    arrange(delta) %>%  
+    select(common_name, total_hs, delta) %>%  
+    head(87)
+```
+
+```{r growth percent}
+# Highest growth over period by percent:
+deltas %>%  
+    arrange(desc(delta_pct_by_100)) %>%  
+    select(common_name, delta, delta_pct_by_100) %>%  
+    head(10)
+
+# Greatest decline over period by percent:
+deltas %>%  
+    arrange(delta_pct_by_100) %>%  
+    select(common_name, delta, delta_pct_by_100) %>%  
+    head(25)
+```
+```{r annualized growth rates}
+# Fastest rate of growth over period, annualized:
+deltas %>%  
+    arrange(desc(delta_rate)) %>%  
+    select(common_name, delta_pct_by_100, delta_rate) %>%  
+    head(10)
+
+# Fastest rate of decline over period, annualized
+deltas %>%  
+    arrange(delta_rate) %>%  
+    select(common_name, delta_pct_by_100, delta_rate) %>%  
+    head(25)
+
+```
+
+```{r}
+# Prepare a complete case data.frame using school_id as the only key variable:
+both <- first_last %>%  
+    filter(!(school_id %in% changes_f$school_id) &
+               !(school_id %in% changes_t$school_id)) %>%  
+    select(govern, school_id, year, total_hs)
+# NB: There are three school_id values that apply to more than one common_name.
+# This causes spurious NA to appear when the spread operation above is applied
+# to a both data.frame that includes the common_name variable. The three schools
+# are Westinghouse/Westinghouse II (609693), Perspectives Charter (400064) which
+# is probably a typo error in the database, and Dugan/Peace and Education
+# (610386). One way around this until I decide whether to alter the main
+# database is to use the deltas data.frame to correct the names and then take
+# the ranks:
+
+ranked <- both %>% 
+    mutate(common_name = deltas$common_name[match(school_id,
+                                                  deltas$school_id)]) %>% 
+    spread(year, total_hs, drop = TRUE) %>% 
+    rename(hs_06 = `2006`, hs_18 = `2018`) %>% 
+    mutate(rank_06 = trunc(rank(-hs_06, ties.method = "min")), 
+           rank_18 = trunc(rank(-hs_18, ties.method = "min")))
+
+ranked %>%  
+    arrange(rank_06) %>%  
+    select(govern, common_name, rank_06, rank_18) #  %>% print(15)
+
+ranked %>%  
+    arrange(desc(rank_06)) %>%  
+    select(govern, common_name, rank_06, rank_18) #  %>% print(15)
+```
+
+Use dumbbells with color aesthetic for year, arrow connecting 06 to 18, for a portion of the data --- maybe above the median --- or in panels for the entire set. Write up the factsheet as a demonstration of things one can do with data reshaping and grammar of graphics.
