@@ -20,7 +20,7 @@ library(tidyverse)
 library(ggplot2)
 ```
 ```{r echo = F}
-enrollment <- read_rds("./enrollment_all_hs.Rds")
+enrollment <- read_rds("./data/enrollment_all_hs.Rds")
 enrollment %>% glimpse()
 ```
 
@@ -51,7 +51,7 @@ Aggregate numbers of missing observations, by grade:
 library(ggthemes)
 enrollment %>% 
     select(7:10) %>% 
-    profile_missing() %>% 
+    DataExplorer::profile_missing() %>% 
     ggplot(aes(x = fct_inorder(feature), y = num_missing)) +
     geom_bar(stat = "identity", width = .5) + 
     labs(y = "Number",
