@@ -20,14 +20,14 @@ library(tidyverse)
 library(ggplot2)
 ```
 ```{r echo = F}
-enrollment <- read_rds("./data/enrollment_all_hs.Rds")
-enrollment %>% glimpse()
+enrollment <- readr::read_rds("./data/enrollment_all_hs.Rds")
+enrollment %>% dplyr::glimpse()
 ```
 
 ```{r plotstr, eval=FALSE, include=FALSE}
 # Visualization of the structure, using DataExplorer package:
-library(DataExplorer)
-plot_str(enrollment)
+# library(DataExplorer)
+DataExplorer::plot_str(enrollment)
 ```
 
 Number of schools represented in the data:
@@ -36,12 +36,20 @@ Number of schools represented in the data:
 
 Number of schools for which there are data for all years in the period:
 ```{r complete, echo = F}
-# 86 through 2017--2018
-enrollment %>% 
-    group_by(school_id) %>% 
-    count() %>% 
-    filter(n == 12) %>% 
-    nrow()
+# 83 through 2018--2019
+listing <- enrollment %>% 
+    select(school_id, 
+           govern, 
+           year, 
+           total_hs)
+
+listing %>% 
+    filter(!is.na(school_id)) %>% 
+    spread(key = year, 
+           value = total_hs, 
+           fill = NA) %>% 
+    complete.cases() %>% 
+    sum()
 ```
 
 Missing observations could be a key feature of the CPS enrollment dataset in some applications, because many of them are not generated randomly but as a result of the entry and exit of schools from the CPS roster. These processes often result in grades being phased in or out at the transitioning school. The next few exhibits concern missing points on some or all data where the school does have a record for the year. The case not considered at the moment is truncation when a school does not exist for some years --a form of hidden missing observations so to speak.
