@@ -82,12 +82,14 @@ Proportions of schools by governance type:
 ``` r
 first_last %>%
     mutate(year = as.factor(year)) %>%
-    ggplot(aes(x = year, fill = govern)) +
+    ggplot(aes(x = year, fill = fct_infreq(govern))) +
     geom_bar(position = position_stack(reverse = TRUE), 
              width = .2) +
     coord_flip() +
-    scale_fill_manual(values = c("green4", "yellow", "darkblue")) +
-    theme(legend.position = "bottom")
+    scale_fill_manual(values = c("darkblue", "green4", "yellow")) +
+    theme(legend.position = "bottom",
+          legend.spacing.x = unit(.2, "cm"),
+          legend.title = element_blank())
 ```
 
 ![](first+this_rawfacts_files/figure-markdown_github/unnamed-chunk-4-1.png)
