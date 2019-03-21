@@ -17,7 +17,7 @@ library(tidyverse)
 ```
 
 ```{r data}
-enrollment_all_hs <- read_rds("./enrollment_all_hs.Rds")
+enrollment_all_hs <- read_rds("./data/enrollment_all_hs.Rds")
 ```
 
 
