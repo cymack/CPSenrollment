@@ -1,7 +1,7 @@
 Raw Facts, 2018
 ================
 Charlotte Mack
-2019-03-09
+2019-03-21
 
 A set of comparisons for the CPS Enrollment data, to be visualized or arranged in tables elsewhere. At date, "first" year is 2006 and "last" year is 2018.
 
@@ -15,8 +15,8 @@ library(tidyverse)
 
     ## ── Attaching packages ────────────────────────────── tidyverse 1.2.1 ──
 
-    ## ✔ ggplot2 3.1.0       ✔ purrr   0.3.1  
-    ## ✔ tibble  2.0.1       ✔ dplyr   0.8.0.1
+    ## ✔ ggplot2 3.1.0       ✔ purrr   0.3.2  
+    ## ✔ tibble  2.1.1       ✔ dplyr   0.8.0.1
     ## ✔ tidyr   0.8.3       ✔ stringr 1.4.0  
     ## ✔ readr   1.3.1       ✔ forcats 0.4.0
 
@@ -25,7 +25,7 @@ library(tidyverse)
     ## ✖ dplyr::lag()    masks stats::lag()
 
 ``` r
-enrollment_all_hs <- read_rds("./enrollment_all_hs.Rds")
+enrollment_all_hs <- read_rds("./data/enrollment_all_hs.Rds")
 ```
 
 ``` r
@@ -64,26 +64,33 @@ first_last %>%
     ## 5  2018 regular    97
 
 ``` r
-# Enrollments, total and by governance
-all <- first_last %>%  
-    group_by(year) %>%  
-    summarize(all_enrollment = sum(total_hs))
-# (Match column 2 of this into the next one, then calculate the percentages.)
-
-first_last %>%  
-    group_by(year, govern) %>%  
-    summarize(enrollment = sum(total_hs)) 
+# # Enrollments, total and by governance
+# all <- first_last %>%  
+#     group_by(year) %>%  
+#     summarize(all_enrollment = sum(total_hs))
+# # (Match column 2 of this into the next one, then calculate the percentages.)
+# 
+# first_last %>%  
+#     group_by(year, govern) %>%  
+#     summarize(enrollment = sum(total_hs),
+#                                pct =
+#                                    enrollment/all$all_enrollment)
 ```
 
-    ## # A tibble: 5 x 3
-    ## # Groups:   year [2]
-    ##    year govern  enrollment
-    ##   <dbl> <chr>        <dbl>
-    ## 1  2006 charter       5689
-    ## 2  2006 regular     103443
-    ## 3  2018 charter      23790
-    ## 4  2018 other         8134
-    ## 5  2018 regular      75421
+Proportions of schools by governance type:
+
+``` r
+first_last %>%
+    mutate(year = as.factor(year)) %>%
+    ggplot(aes(x = year, fill = govern)) +
+    geom_bar(position = position_stack(reverse = TRUE), 
+             width = .2) +
+    coord_flip() +
+    scale_fill_manual(values = c("green4", "yellow", "darkblue")) +
+    theme(legend.position = "bottom")
+```
+
+![](first+this_rawfacts_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 ``` r
 # Largest and smallest enrollments overall and by governance
