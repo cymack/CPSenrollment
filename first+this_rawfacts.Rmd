@@ -26,6 +26,13 @@ enrollment_all_hs <- read_rds("./data/enrollment_all_hs.Rds")
 first_last <- enrollment_all_hs %>% filter(year %in% c(2006, 2018))
 ```
 
+```{r }
+# Summary statistics, total and by governance
+first_last %>%
+    filter(year == 2006) %>%
+    summary()
+```
+
 ```{r}
 # Counts of schools, total and by governance
 first_last %>% 
@@ -205,6 +212,33 @@ deltas %>%
     select(common_name, delta, delta_pct_by_100) %>%  
     head(25)
 ```
+
+Twenty-four schools lost more than half their enrollment over the data period:
+
+```{r }
+deltas %>% 
+    filter(delta_pct_by_100 <= -.50) %>% 
+    ggplot(aes(x = fct_rev(fct_reorder(common_name, delta_pct_by_100)),
+               y = delta_pct_by_100)) +
+    geom_bar(stat = "Identity", width = .25) +
+    coord_flip()
+```
+
+Here are the enrollment timelines for those schools:
+```{r }
+
+decliners <- deltas %>% 
+    filter(delta_pct_by_100 <= -.50) %>% 
+    select(common_name)
+
+enrollment_all_hs %>% 
+    filter(common_name %in% decliners$common_name) %>%
+    ggplot(aes(x = year, y = total_hs)) +
+    geom_line() +
+    facet_wrap(~ common_name, nrow = 6)
+
+```
+
 ```{r annualized growth rates}
 # Fastest rate of growth over period, annualized:
 deltas %>%  
@@ -252,4 +286,29 @@ ranked %>%
     select(govern, common_name, rank_06, rank_18) #  %>% print(15)
 ```
 
-Use dumbbells with color aesthetic for year, arrow connecting 06 to 18, for a portion of the data --- maybe above the median --- or in panels for the entire set. Write up the factsheet as a demonstration of things one can do with data reshaping and grammar of graphics.
+The next graph shows high schools ranked by total grade 9 to 12 enrollment, anchored in the 2006-2007 school year. The direction of the arrows shows whether a school moved up (to the left) or down in the ranking. Schools that made large moves up the ranking had been originally among the smaller schools, no surprise, and of the three most striking cases, two were schools that early in the data period were being re-opened and phased in after extensive physical makeover (Lindblom and Westinghouse). The larger number of above-median schools that fell to below median, or even first quartile, ranks lacks such simple organic explanation.
+
+```{r ranking dumbells}
+ranked %>% 
+    mutate(common_name = 
+               fct_reorder(common_name, rank_06, median)) %>%
+    select(-starts_with("hs")) %>% 
+    gather(key = rank_yr, 
+           value = ranking, 
+           -govern, 
+           -school_id, 
+           -common_name) %>% 
+    ggplot(aes(x = fct_rev(common_name), 
+               y = ranking, 
+               color = rank_yr)) + 
+    geom_point(position = position_jitter(width = 0, height = 0.6)) +
+    coord_flip() + 
+    geom_path(aes(group = common_name), 
+              lineend = "butt", 
+              linejoin = "mitre", 
+              arrow = grid::arrow(angle = 15, 
+                                  length = unit(.2, "cm"), 
+                                  ends = "last", 
+                                  type = "closed"))
+
+```

@@ -1,7 +1,7 @@
 Raw Facts, 2018
 ================
 Charlotte Mack
-2019-03-21
+2019-03-25
 
 A set of comparisons for the CPS Enrollment data, to be visualized or arranged in tables elsewhere. At date, "first" year is 2006 and "last" year is 2018.
 
@@ -13,14 +13,14 @@ options(digits = 2)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ──────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.1.0       ✔ purrr   0.3.2  
     ## ✔ tibble  2.1.1       ✔ dplyr   0.8.0.1
     ## ✔ tidyr   0.8.3       ✔ stringr 1.4.0  
     ## ✔ readr   1.3.1       ✔ forcats 0.4.0
 
-    ## ── Conflicts ───────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -32,6 +32,38 @@ enrollment_all_hs <- read_rds("./data/enrollment_all_hs.Rds")
 # Filter first and this year from data
 first_last <- enrollment_all_hs %>% filter(year %in% c(2006, 2018))
 ```
+
+``` r
+# Summary statistics, total and by governance
+first_last %>%
+    filter(year == 2006) %>%
+    summary()
+```
+
+    ##     govern           school_id         common_name             year     
+    ##  Length:126         Length:126         Length:126         Min.   :2006  
+    ##  Class :character   Class :character   Class :character   1st Qu.:2006  
+    ##  Mode  :character   Mode  :character   Mode  :character   Median :2006  
+    ##                                                           Mean   :2006  
+    ##                                                           3rd Qu.:2006  
+    ##                                                           Max.   :2006  
+    ##                                                                         
+    ##      total         total_hs         g09            g10           g11      
+    ##  Min.   :  53   Min.   :  53   Min.   :  19   Min.   :  1   Min.   :   6  
+    ##  1st Qu.: 264   1st Qu.: 233   1st Qu.: 120   1st Qu.: 98   1st Qu.:  72  
+    ##  Median : 558   Median : 498   Median : 215   Median :178   Median : 204  
+    ##  Mean   : 930   Mean   : 866   Mean   : 311   Mean   :266   Mean   : 233  
+    ##  3rd Qu.:1479   3rd Qu.:1436   3rd Qu.: 471   3rd Qu.:422   3rd Qu.: 358  
+    ##  Max.   :5452   Max.   :4278   Max.   :1136   Max.   :945   Max.   :1230  
+    ##                                NA's   :8      NA's   :15    NA's   :24    
+    ##       g12      
+    ##  Min.   :   1  
+    ##  1st Qu.:  68  
+    ##  Median : 142  
+    ##  Mean   : 199  
+    ##  3rd Qu.: 303  
+    ##  Max.   :1000  
+    ##  NA's   :30
 
 ``` r
 # Counts of schools, total and by governance
@@ -89,10 +121,10 @@ first_last %>%
     scale_fill_manual(values = c("darkblue", "green4", "yellow")) +
     theme(legend.position = "bottom",
           legend.spacing.x = unit(.2, "cm"),
-          legend.title = element_blank())
+          legend.title = element_blank()) 
 ```
 
-![](first+this_rawfacts_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](first+this_rawfacts_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
 # Largest and smallest enrollments overall and by governance
@@ -521,6 +553,35 @@ deltas %>%
     ## 10 Gage Park HS   -1173           -0.781
     ## # … with 15 more rows
 
+Twenty-four schools lost more than half their enrollment over the data period:
+
+``` r
+deltas %>% 
+    filter(delta_pct_by_100 <= -.50) %>% 
+    ggplot(aes(x = fct_rev(fct_reorder(common_name, delta_pct_by_100)),
+               y = delta_pct_by_100)) +
+    geom_bar(stat = "Identity", width = .25) +
+    coord_flip()
+```
+
+![](first+this_rawfacts_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+Here are the enrollment timelines for those schools:
+
+``` r
+decliners <- deltas %>% 
+    filter(delta_pct_by_100 <= -.50) %>% 
+    select(common_name)
+
+enrollment_all_hs %>% 
+    filter(common_name %in% decliners$common_name) %>%
+    ggplot(aes(x = year, y = total_hs)) +
+    geom_line() +
+    facet_wrap(~ common_name, nrow = 6)
+```
+
+![](first+this_rawfacts_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
 ``` r
 # Fastest rate of growth over period, annualized:
 deltas %>%  
@@ -630,4 +691,30 @@ ranked %>%
     ## 10 regular Uplift Community HS           78      69
     ## # … with 77 more rows
 
-Use dumbbells with color aesthetic for year, arrow connecting 06 to 18, for a portion of the data --- maybe above the median --- or in panels for the entire set. Write up the factsheet as a demonstration of things one can do with data reshaping and grammar of graphics.
+The next graph shows high schools ranked by total grade 9 to 12 enrollment, anchored in the 2006-2007 school year. The direction of the arrows shows whether a school moved up (to the left) or down in the ranking. Schools that made large moves up the ranking had been originally among the smaller schools, no surprise, and of the three most striking cases, two were schools that early in the data period were being re-opened and phased in after extensive physical makeover (Lindblom and Westinghouse). The larger number of above-median schools that fell to below median, or even first quartile, ranks lacks such simple organic explanation.
+
+``` r
+ranked %>% 
+    mutate(common_name = 
+               fct_reorder(common_name, rank_06, median)) %>%
+    select(-starts_with("hs")) %>% 
+    gather(key = rank_yr, 
+           value = ranking, 
+           -govern, 
+           -school_id, 
+           -common_name) %>% 
+    ggplot(aes(x = fct_rev(common_name), 
+               y = ranking, 
+               color = rank_yr)) + 
+    geom_point(position = position_jitter(width = 0, height = 0.6)) +
+    coord_flip() + 
+    geom_path(aes(group = common_name), 
+              lineend = "butt", 
+              linejoin = "mitre", 
+              arrow = grid::arrow(angle = 15, 
+                                  length = unit(.2, "cm"), 
+                                  ends = "last", 
+                                  type = "closed"))
+```
+
+![](first+this_rawfacts_files/figure-markdown_github/ranking%20dumbells-1.png)
