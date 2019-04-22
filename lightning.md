@@ -1,7 +1,7 @@
 Lightning Talk
 ================
 Charlotte Mack
-April 21, 2019
+April 22, 2019
 
 ``` r
 library(dplyr)
@@ -140,7 +140,10 @@ ranked %>% filter(rank_06 <= 15)  %>%
               arrow = grid::arrow(angle = 15, 
                                   length = unit(.2, "cm"), 
                                   ends = "last", 
-                                  type = "closed"))
+                                  type = "closed")) +
+    labs(title = "How the 2006 Top 15 Fared",
+         caption = "Many of 2006 Top 15 schools \nmoved down by at least one decile.") +
+    theme(axis.title.y = element_blank()) 
 ```
 
 ![](lightning_files/figure-markdown_github/re-tidy%20and%20plot-1.png)

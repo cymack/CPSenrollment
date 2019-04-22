@@ -80,7 +80,10 @@ ranked %>% filter(rank_06 <= 15)  %>%
               arrow = grid::arrow(angle = 15, 
                                   length = unit(.2, "cm"), 
                                   ends = "last", 
-                                  type = "closed"))
+                                  type = "closed")) +
+    labs(title = "How the 2006 Top 15 Fared",
+         caption = "Many of 2006 Top 15 schools \nmoved down by at least one decile.") +
+    theme(axis.title.y = element_blank()) 
 
 ```
 
