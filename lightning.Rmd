@@ -5,16 +5,83 @@ date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: github_document
 ---
 
-The purpose of this talk is to encourage R users to learn to reshape data with R tools, and to think in terms of the shape or structure of data when forming analytical objects. My example will show how moving easily from a tidy structure to a spread-type structure can make certain routine tasks easier, and can sometimes make it possible to spot interesting patterns even in the tabulated form of the data, while visualizing those patterns might call for shaping the data back to a tidy form, to have the necessary aesthetic mappings to render the ideas.
+```{r libraries}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+library(forcats)
+```
 
-The example data is an extract of enrollment data for high schools in the Chicago Public Schools district. The full set is available at (github site). Here, we just use records from September of 2006 and 2018, the first and last periods of the whole series. Only schools that have records for both of those years are used. This data set is in tidy form: each row records an observation, each column a variable, and of course every observed unit is of the same type, a school (RDS 149). In this structure we can easily use base R commands such as head(), tail(), and summary(), or tidyverse commands such as dplyr::glimpse() to get an overview of what the data.frame contains. Whether we use base::plot(), ggplot2::ggplot(), or some other graphing engine, it is straightforward to generate any number of standard graphs to visualize features of the set as a whole, or to compare differences among the units with facetted plots. The structure of the data in this form fits the structure required by our tools quite well.
+The purpose of this talk is to encourage R users to learn to reshape data with R tools, and to think in terms of the shape or structure of data when forming analytical objects. My example will show how moving easily from a tidy structure to a spread-type structure can even make it possible to see interesting patterns in tabulated data, while visualizing those patterns might call for shaping the data back to a tidy form, to have the necessary aesthetic mappings to render the ideas.
 
-It sometimes happens, however, that the tidy structure causes us to run around unnecessarily to get a grasp on some matter of interest. A longitudinal data set such as the schools data here poses such challenges. Sometimes we do not want to emphasize each observation, as we get from the tidy records. Instead, we want to change what we regard as the unit of observation from say, one school at one year, to one school over all the years in the survey. A simple reason to want to do this could be housekeeping. We want to know, for the sake of further analysis, regressions or such, which schools have complete data in all years, with no NA entries. This is a common issue in using longitudinal data. A simple way to find out in one step is stat::complete.cases(). But this requires reshaping the data into a form that is spread out with respect to the annual variable of interest. Learning to use a method such as tidyr::spread() in a fluid manner makes for better data housekeeping and reporting. Also, one way of generating the extract from the larger schools data set that is used here is to filter by complete.cases(), and then return the result to tidy form using tidyr::gather().
+The example data is an extract of enrollment data for high schools in the Chicago Public Schools district. The full set is available at [my CPSenrollment github site](https://github.com/cymack/CPSenrollment). Here, we just use records from September of 2006 and 2018, the first and last periods of the whole series. Only schools that have records for both of those years are used. 
 
-It is possible, of course to do this data reshaping in a spreadsheet, by cutting and transpose pasting. Please, do not ever do this! It is horrifyingly error-prone, and consumes mass quantities of time even for relatively smaller data tables such as the present one. As even Hadley Wickham himself has admitted, the vocabulary and mechanics of spreading and gathering are a little tough, but learning them even as a high beginner is productive confusion as opposed to the other kind.
+```{r slide 1 material}
+talk_dat <- read_csv("talk_dat.csv")
+talk_dat %>% 
+    arrange(school_id) %>%
+    head()
+talk_dat %>% 
+    group_by(year) %>% 
+    count()
 
-When one is comfortable with reshaping, more useful things are possible. Again returning to longitudinal data, one often wants to make a static comparison between the units at two different dates. For the schools data, one might like to know how the schools ranked by their enrollments at the beginning and end of the survey. One can of course filter two lists, after creating the ranking variables, and run around looking at them separately. Or, having become comfortable with data spreading, one can generate a nice, side-by-side table. This table is not essentially tidy, as it was generated from a spread, untidy data structure which (fundamentally) has observations for different years treated as variables in each observations. Despite this, scanning down the table shows some interesting movement of ranks by a number of schools, with some of the largest at the beginning of the period now appearing in the middle or lower quintiles. Since it's known from other work not shown here that average school sizes have shrunk as well, these schools have experienced eye-opening losses in enrollment.
+```
+
+This data set is in tidy form: each row records an observation, each column a variable, and of course every observed unit is of the same type, a school (RDS 149). In this structure we can easily use base R commands such as head(), tail(), and summary(), or tidyverse commands such as dplyr::glimpse() to get an overview of what the data.frame contains. Whether we use base::plot(), ggplot2::ggplot(), or some other graphing engine, it is straightforward to generate any number of standard graphs to visualize features of the set as a whole, or to compare differences among the units with facetted plots. The structure of the data in this form fits the structure required by our tools quite well.
+
+```{r by-year distribution plots}
+talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
+    geom_density(size = 1, alpha = 0.5) +
+    geom_histogram(alpha = 0.5, bins = 20) +
+    facet_wrap(~ year) +
+    labs(x = "Total High School Enrollment")
+```
+
+It sometimes happens, however, that the tidy structure causes us to run around unnecessarily to get a grasp on some matter of interest. A longitudinal data set such as the schools data here poses such challenges. Sometimes we do not want to emphasize each observation, as we get from the tidy records. Instead, we want to change what we regard as the unit of observation from say, one school at one year, to one school over all the years in the survey.
+
+It is possible, of course to do this data reshaping in a spreadsheet, by cutting and transpose pasting. Please, do not ever do this! It is horrifyingly error-prone, and consumes mass quantities of time even for relatively smaller data tables such as the present one. As even Hadley Wickham himself has admitted, the vocabulary and mechanics of spreading and gathering are a little tough. However, learning them is productive confusion as opposed to the other kind.
+
+When one is comfortable with reshaping, useful things are possible. Again returning to longitudinal data, one often wants to make a static comparison between the units at two different dates: How do the schools rank by their enrollments at the beginning and end of the survey? One can of course filter two lists, after creating the ranking variables, and run around looking at them separately. Or, having become comfortable with data spreading, one can generate a side-by-side table. 
+
+```{r side-by-side}
+ranked <- talk_dat %>% spread(year, total_hs, drop = TRUE) %>% 
+    rename(hs_06 = `2006`, 
+           hs_18 = `2018`) %>% 
+    mutate(rank_06 = trunc(rank(-hs_06, ties.method = "min")), 
+           rank_18 = trunc(rank(-hs_18, ties.method = "min"))) %>%
+    arrange(rank_06) %>%
+    select(-school_id)
+
+ranked
+```
+
+This table is not essentially tidy, as it was generated from a spread, untidy data structure which has observations for different years that are treated as variables in each of its observation. But, scanning down the table shows some interesting movement of ranks by a number of schools, with some of the largest at the beginning of the period now appearing in the middle or lower quintiles. We saw earlier that average school sizes have shrunk as well, so these schools have experienced eye-opening losses in enrollment.
 
 How to make this point even clearer? A visualization, of course. I decided to try a simple graph in which each school had a line with a dot in one color for its 2006 rank, one in another color for 2018, and an arrow connecting them to emphasize the direction in which the rank moved. I wanted to do this with as few geom layers as possible, but getting the arrow pointing in consistently the proper direction with just one command was the clincher that required the data be restructured back into tidy form.
+
+```{r re-tidy and plot}
+ranked %>% filter(rank_06 <= 15)  %>% 
+    mutate(common_name = 
+               fct_reorder(common_name, rank_06, median)) %>%
+    select(-starts_with("hs")) %>% 
+    gather(key = rank_yr, 
+           value = ranking, 
+           -govern,
+           -common_name) %>% 
+    ggplot(aes(x = fct_rev(common_name), 
+               y = ranking, 
+               color = rank_yr)) + 
+    geom_point(position = position_jitter(width = 0, height = 0.6)) +
+    coord_flip() + 
+    geom_path(aes(group = common_name), 
+              lineend = "butt", 
+              linejoin = "mitre", 
+              arrow = grid::arrow(angle = 15, 
+                                  length = unit(.2, "cm"), 
+                                  ends = "last", 
+                                  type = "closed"))
+
+```
 
 Now there can be an aesthetic mapping within the gathered variable rank_yr to color the dots appropriately within one geom_point() layer. This also creates a consistent beginning and end for the arrow specification in geom_path(). There might be other ways to do this, even within ggplot2, but this way seems very fluid, and only at the cost of learning to recognize data structure problems, and learning to be comfortable with correcting them with a programmatic reshape command.
