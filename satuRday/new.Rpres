@@ -15,7 +15,7 @@ library(readr)
 library(forcats)
 ```
 ```{r data, echo = FALSE}
-talk_dat <- read_csv("./satuRday/talk_dat.csv")
+talk_dat <- read_csv("./talk_dat.csv")
 talk_dat %>% 
     select(-c(govern, school_id)) %>%
     arrange(common_name) %>%
