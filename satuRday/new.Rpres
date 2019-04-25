@@ -1,13 +1,37 @@
-Reshape Your Data to the  Grammar of Your Graphics
+Shifts in Enrollment Distribution among Chicago Highschools: Insights from reshaping CPS data
 ========================================================
 author: Charlotte Mack
 date: April 27th, 2019
 autosize: true
 
-
-A Tidy Dataset
+Motivations
 ========================================================
-```{r libraries, echo = FALSE}
+
+- Negative enrollment trends in Harlan & Hirsch High schools
+
+- Closing of the historic Du Sable High School around 2006. Alum includes:
+    - Harold Washington
+    - Gene Ammons
+    - Johnny Griffin
+    - Eddy Harris
+    
+
+Chicago Public School (CPS) data
+========================================================
+
+- Sample data spans **2006** through **2018**
+
+- Includes all schools under the Chicago Public School District
+    - Public Schools
+    - Charter Schools
+    - Contract Schools
+    
+
+A Tidy CPS Dataset: 84 obs per year
+========================================================
+
+- Data set head
+```{r libraries, echo = FALSE,}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -16,17 +40,23 @@ library(forcats)
 ```
 ```{r data, echo = FALSE}
 talk_dat <- read_csv("./talk_dat.csv")
-talk_dat %>% 
+kable(talk_dat %>% 
     select(-c(govern, school_id)) %>%
     arrange(common_name) %>%
-    head()
-talk_dat %>% 
-    group_by(year) %>% 
-    count()
+    head(4), caption = "84 Schools per year")
+```
+- Data set tail
+```{r data2, echo = FALSE}
+kable(talk_dat %>% 
+    select(-c(govern, school_id)) %>%
+    arrange(common_name) %>%
+    tail(4), caption = "84 Schools per year")
+
 ```
 
-Standard plots are easy with tidy data
+Change in Enrollment Distributions
 ========================================================
+
 ```{r by-year distribution code, eval = FALSE}
 talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) + facet_wrap(~ year) 
 ```
@@ -36,7 +66,8 @@ talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
     geom_density(size = 2, alpha = 1.0) +
     geom_histogram(alpha = 0.5, bins = 20) +
     facet_wrap(~ year) +
-    labs(x = "Total High School Enrollment")
+    labs(x = "Total High School Enrollment") +
+    theme(strip.text = element_text(size = 48))
 ```
 
 Un-tidying for a Side-by-side View
