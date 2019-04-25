@@ -88,7 +88,7 @@ ranked %>% filter(rank_06 <= 15)  %>%
 
 The Final Plot
 ========================================================
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.width = 12, fig.height = 10}
 ranked %>% filter(rank_06 <= 15)  %>% 
     mutate(common_name = 
                fct_reorder(common_name, rank_06, median)) %>%
@@ -99,7 +99,8 @@ ranked %>% filter(rank_06 <= 15)  %>%
     ggplot(aes(x = fct_rev(common_name), 
                y = ranking, 
                color = rank_yr)) + 
-    geom_point(position = position_jitter(width = 0, height = 0.6)) +
+    geom_point(position = position_jitter(width = 0, height = 0.6),
+               size = 4) +
     coord_flip() + 
     geom_path(aes(group = common_name), 
               lineend = "butt", 
