@@ -34,8 +34,7 @@ Standard plots are easy with tidy data
 ========================================================
 
 ```r
-talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
-    geom_density() + geom_histogram() + facet_wrap(~ year) 
+talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) + facet_wrap(~ year) 
 ```
 
 ![plot of chunk by-year distribution plots](new-figure/by-year distribution plots-1.png)
@@ -43,18 +42,12 @@ talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
 Un-tidying for a Side-by-side View
 ========================================================
 
-
 ```r
-ranked <- talk_dat %>% spread(year, total_hs, drop = TRUE) %>% 
-    rename(hs_06 = `2006`, 
-           hs_18 = `2018`) %>% 
-    mutate(rank_06 = trunc(rank(-hs_06, ties.method = "min")), 
-           rank_18 = trunc(rank(-hs_18, ties.method = "min"))) %>%
-    arrange(rank_06) %>%
-    select(-c(school_id, hs_06, hs_18))
-
-ranked
+ranked <- talk_dat %>% spread(year, total_hs)
 ```
+
+
+
 
 ```
 # A tibble: 84 x 4
@@ -80,7 +73,27 @@ Re-tidying to Plot a Side-by-side View
 
 ```r
 ranked %>% filter(rank_06 <= 15)  %>% 
-    gather(key = rank_yr,  value = ranking, -common_name)
+    mutate(common_name = 
+               fct_reorder(common_name, rank_06, median)) %>%
+    select(-c(starts_with("hs"), govern)) %>% 
+    gather(key = rank_yr, 
+           value = ranking, 
+           -common_name) %>%
+    ggplot(aes(x = fct_rev(common_name), 
+               y = ranking, 
+               color = rank_yr)) + 
+    geom_point(position = position_jitter(width = 0, height = 0.6)) +
+    coord_flip() + 
+    geom_path(aes(group = common_name), 
+              lineend = "butt", 
+              linejoin = "mitre", 
+              arrow = grid::arrow(angle = 15, 
+                                  length = unit(.2, "cm"), 
+                                  ends = "last", 
+                                  type = "closed"))
 ```
 </small>
+
+The Final Plot
+========================================================
 ![plot of chunk unnamed-chunk-2](new-figure/unnamed-chunk-2-1.png)

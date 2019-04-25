@@ -28,8 +28,7 @@ talk_dat %>%
 Standard plots are easy with tidy data
 ========================================================
 ```{r by-year distribution code, eval = FALSE}
-talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
-    geom_density() + geom_histogram() + facet_wrap(~ year) 
+talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) + facet_wrap(~ year) 
 ```
 
 ```{r by-year distribution plots, echo = FALSE, fig.width = 12, fig.fullwidth = TRUE}
@@ -42,8 +41,11 @@ talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
 
 Un-tidying for a Side-by-side View
 ========================================================
+```{r side-by-side nut, eval = FALSE}
+ranked <- talk_dat %>% spread(year, total_hs)
+```
 
-```{r side-by-side}
+```{r side-by-side, echo = FALSE}
 ranked <- talk_dat %>% spread(year, total_hs, drop = TRUE) %>% 
     rename(hs_06 = `2006`, 
            hs_18 = `2018`) %>% 
@@ -51,7 +53,9 @@ ranked <- talk_dat %>% spread(year, total_hs, drop = TRUE) %>%
            rank_18 = trunc(rank(-hs_18, ties.method = "min"))) %>%
     arrange(rank_06) %>%
     select(-c(school_id, hs_06, hs_18))
+```
 
+```{r ranked, echo = FALSE}
 ranked
 ```
 
@@ -61,9 +65,29 @@ Re-tidying to Plot a Side-by-side View
 <small>
 ```{r, eval = FALSE}
 ranked %>% filter(rank_06 <= 15)  %>% 
-    gather(key = rank_yr,  value = ranking, -common_name)
+    mutate(common_name = 
+               fct_reorder(common_name, rank_06, median)) %>%
+    select(-c(starts_with("hs"), govern)) %>% 
+    gather(key = rank_yr, 
+           value = ranking, 
+           -common_name) %>%
+    ggplot(aes(x = fct_rev(common_name), 
+               y = ranking, 
+               color = rank_yr)) + 
+    geom_point(position = position_jitter(width = 0, height = 0.6)) +
+    coord_flip() + 
+    geom_path(aes(group = common_name), 
+              lineend = "butt", 
+              linejoin = "mitre", 
+              arrow = grid::arrow(angle = 15, 
+                                  length = unit(.2, "cm"), 
+                                  ends = "last", 
+                                  type = "closed"))
 ```
 </small>
+
+The Final Plot
+========================================================
 ```{r, echo = FALSE}
 ranked %>% filter(rank_06 <= 15)  %>% 
     mutate(common_name = 
