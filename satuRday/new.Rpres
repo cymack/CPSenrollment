@@ -1,4 +1,4 @@
-Shifts in Enrollment Distribution among Chicago Highschools: Insights from reshaping CPS data
+Shifts in Enrollment Distribution   among Chicago High Schools:  Insights from reshaping CPS data
 ========================================================
 author: Charlotte Mack
 date: April 27th, 2019
@@ -7,14 +7,12 @@ autosize: true
 Motivations
 ========================================================
 
-- Negative enrollment trends in Harlan & Hirsch High schools
+- Sharply declining enrollments in Harlan & Hirsch High schools
 
-- Closing of the historic Du Sable High School around 2006. Alum includes:
-    - Harold Washington
-    - Gene Ammons
-    - Johnny Griffin
-    - Eddy Harris
-    
+- Closing of the historic DuSable High School around 2006. Alumni and teaching staff include
+    - Harold Washington, Margaret Burroughs
+    - Dinah Washington, Gene Ammons, Nat "King" Cole, Johnny Griffin, Eddie Harris, Walter Dyett ...
+    - Don Cornelius, Redd Foxx
 
 Chicago Public School (CPS) data
 ========================================================
@@ -37,20 +35,23 @@ library(tidyr)
 library(ggplot2)
 library(readr)
 library(forcats)
+library(kableExtra)
 ```
 ```{r data, echo = FALSE}
 talk_dat <- read_csv("./talk_dat.csv")
 kable(talk_dat %>% 
     select(-c(govern, school_id)) %>%
     arrange(common_name) %>%
-    head(4), caption = "84 Schools per year")
+    head(4), caption = "84 Schools per year") %>%
+    kable_styling()
 ```
 - Data set tail
 ```{r data2, echo = FALSE}
 kable(talk_dat %>% 
     select(-c(govern, school_id)) %>%
     arrange(common_name) %>%
-    tail(4), caption = "84 Schools per year")
+    tail(4), caption = "84 Schools per year", align = "c") %>%
+    kable_styling()
 
 ```
 
@@ -62,12 +63,23 @@ talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) + facet_wrap(~ year)
 ```
 
 ```{r by-year distribution plots, echo = FALSE, fig.width = 12, fig.fullwidth = TRUE}
-talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
-    geom_density(size = 2, alpha = 1.0) +
+talk_dat %>% ggplot(aes(x = total_hs, y = ..density..), 
+                    fill = "orange", 
+                    color = "orange",
+                    alpha = .5) +
+    geom_density(size = 2, 
+                 alpha = 1.0, 
+                 color = "darkviolet") +
+    scale_color_hue(l = 45) +
     geom_histogram(alpha = 0.5, bins = 20) +
     facet_wrap(~ year) +
-    labs(x = "Total High School Enrollment") +
-    theme(strip.text = element_text(size = 48))
+    labs(x = "\nTotal High School Enrollment") +
+    theme(panel.margin = unit(.25, "in")) +
+    theme(strip.text = element_text(size = 48)) +
+    theme(axis.title.y = element_text(size = 24)) +
+    theme(axis.text.x = element_text(size = 16)) +
+    theme(axis.title.x = element_text(size = 36)) +
+    theme(plot.margin = margin(2, 2, 2, 2))
 ```
 
 Un-tidying for a Side-by-side View
@@ -83,12 +95,14 @@ ranked <- talk_dat %>% spread(year, total_hs, drop = TRUE) %>%
     mutate(rank_06 = trunc(rank(-hs_06, ties.method = "min")), 
            rank_18 = trunc(rank(-hs_18, ties.method = "min"))) %>%
     arrange(rank_06) %>%
-    select(-c(school_id, hs_06, hs_18))
+    select(-c(govern, school_id, hs_06, hs_18))
 ```
 
 ```{r ranked, echo = FALSE}
-ranked
+kable(ranked %>% head(10), align = "c") %>%
+    kable_styling()
 ```
+
 
 Re-tidying to Plot a Side-by-side View
 ========================================================
@@ -123,7 +137,7 @@ The Final Plot
 ranked %>% filter(rank_06 <= 15)  %>% 
     mutate(common_name = 
                fct_reorder(common_name, rank_06, median)) %>%
-    select(-c(starts_with("hs"), govern)) %>% 
+    select(-c(starts_with("hs"))) %>% 
     gather(key = rank_yr, 
            value = ranking, 
            -common_name) %>% 
@@ -131,17 +145,25 @@ ranked %>% filter(rank_06 <= 15)  %>%
                y = ranking, 
                color = rank_yr)) + 
     geom_point(position = position_jitter(width = 0, height = 0.6),
-               size = 4) +
+               size = 8) +
     coord_flip() + 
     geom_path(aes(group = common_name), 
+              size = 2,
+              alpha = .3,
+              color = "black",
               lineend = "butt", 
               linejoin = "mitre", 
-              arrow = grid::arrow(angle = 15, 
-                                  length = unit(.2, "cm"), 
+              arrow = grid::arrow(angle = 20, 
+                                  length = unit(.5, "cm"), 
                                   ends = "last", 
                                   type = "closed")) +
+    scale_color_manual(values = c("dark violet", "orange")) +
     labs(title = "How the 2006 Top 15 Fared",
-         caption = "Many of 2006 Top 15 schools \nmoved down by at least one decile.") +
-    theme(axis.title.y = element_blank()) 
+         caption = "\nMany of 2006 Top 15 schools \nmoved down by at least one decile.") +
+    theme(axis.title.y = element_blank()) +
+    theme(axis.title.x = element_text(size = 26)) +
+    theme(axis.text = element_text(size = 24)) +
+    theme(plot.title = element_text(size = 38)) +
+    theme(plot.caption = element_text(size = 32))
 
 ```
