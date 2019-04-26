@@ -9,7 +9,7 @@ Motivations
 
 - Sharply declining enrollments in Harlan & Hirsch High schools
 
-- Closing of the historic DuSable High School around 2006. Alumni and teaching staff include
+- Closing of [the historic DuSable High School](https://en.wikipedia.org/wiki/DuSable_High_School), August 2006. Alumni and teaching staff include
     - Harold Washington, Margaret Burroughs
     - Dinah Washington, Gene Ammons, Nat "King" Cole, Johnny Griffin, Eddie Harris, Walter Dyett ...
     - Don Cornelius, Redd Foxx
@@ -24,6 +24,7 @@ Chicago Public School (CPS) data
     - Charter Schools
     - Contract Schools
     
+- Updated data in R-ready form is available at [CPSenrollment](https://github.com/cymack/CPSenrollment) and in the data package [CPSenrollpack](https://github.com/cymack/CPSenrollpack), both at github.com.
 
 A Tidy CPS Dataset: 84 obs per year
 ========================================================
