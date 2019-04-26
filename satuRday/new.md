@@ -41,22 +41,22 @@ A Tidy CPS Dataset: 84 obs per year
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> ACE Tech Chtr HS </td>
+   <td style="text-align:left;"> ACE Tech Chtr </td>
    <td style="text-align:right;"> 2006 </td>
    <td style="text-align:right;"> 272 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> ACE Tech Chtr HS </td>
+   <td style="text-align:left;"> ACE Tech Chtr </td>
    <td style="text-align:right;"> 2018 </td>
    <td style="text-align:right;"> 315 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Amundsen HS </td>
+   <td style="text-align:left;"> Amundsen </td>
    <td style="text-align:right;"> 2006 </td>
    <td style="text-align:right;"> 1500 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Amundsen HS </td>
+   <td style="text-align:left;"> Amundsen </td>
    <td style="text-align:right;"> 2018 </td>
    <td style="text-align:right;"> 1226 </td>
   </tr>
@@ -74,22 +74,22 @@ A Tidy CPS Dataset: 84 obs per year
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:center;"> York Alt HS </td>
+   <td style="text-align:center;"> York Alt </td>
    <td style="text-align:center;"> 2006 </td>
    <td style="text-align:center;"> 354 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> York Alt HS </td>
+   <td style="text-align:center;"> York Alt </td>
    <td style="text-align:center;"> 2018 </td>
    <td style="text-align:center;"> 210 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Young Magnet HS </td>
+   <td style="text-align:center;"> Young Magnet </td>
    <td style="text-align:center;"> 2006 </td>
    <td style="text-align:center;"> 1901 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Young Magnet HS </td>
+   <td style="text-align:center;"> Young Magnet </td>
    <td style="text-align:center;"> 2018 </td>
    <td style="text-align:center;"> 1915 </td>
   </tr>
@@ -125,52 +125,52 @@ ranked <- talk_dat %>% spread(year, total_hs)
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:center;"> Lane Tech HS </td>
+   <td style="text-align:center;"> Lane Tech </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Kelly HS </td>
+   <td style="text-align:center;"> Kelly </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 6 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Curie HS </td>
+   <td style="text-align:center;"> Curie </td>
    <td style="text-align:center;"> 3 </td>
    <td style="text-align:center;"> 3 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Schurz HS </td>
+   <td style="text-align:center;"> Schurz </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 9 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Taft HS </td>
+   <td style="text-align:center;"> Taft </td>
    <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 2 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Farragut HS </td>
+   <td style="text-align:center;"> Farragut </td>
    <td style="text-align:center;"> 6 </td>
    <td style="text-align:center;"> 37 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Clemente HS </td>
+   <td style="text-align:center;"> Clemente </td>
    <td style="text-align:center;"> 7 </td>
    <td style="text-align:center;"> 34 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Lincoln Park HS </td>
+   <td style="text-align:center;"> Lincoln Park </td>
    <td style="text-align:center;"> 8 </td>
    <td style="text-align:center;"> 4 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Steinmetz HS </td>
+   <td style="text-align:center;"> Steinmetz </td>
    <td style="text-align:center;"> 9 </td>
    <td style="text-align:center;"> 20 </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> Bogan Tech HS </td>
+   <td style="text-align:center;"> Bogan Tech </td>
    <td style="text-align:center;"> 10 </td>
    <td style="text-align:center;"> 33 </td>
   </tr>
@@ -191,6 +191,7 @@ ranked %>% filter(rank_06 <= 15)  %>%
     gather(key = rank_yr, 
            value = ranking, 
            -common_name) %>%
+   
     ggplot(aes(x = fct_rev(common_name), 
                y = ranking, 
                color = rank_yr)) + 

@@ -42,6 +42,7 @@ talk_dat <- read_csv("./talk_dat.csv")
 kable(talk_dat %>% 
     select(-c(govern, school_id)) %>%
     arrange(common_name) %>%
+    mutate(common_name = stringr::str_replace(common_name, " HS", "")) %>%
     head(4), caption = "84 Schools per year") %>%
     kable_styling()
 ```
@@ -50,6 +51,7 @@ kable(talk_dat %>%
 kable(talk_dat %>% 
     select(-c(govern, school_id)) %>%
     arrange(common_name) %>%
+    mutate(common_name = stringr::str_replace(common_name, " HS", "")) %>%
     tail(4), caption = "84 Schools per year", align = "c") %>%
     kable_styling()
 
@@ -94,6 +96,7 @@ ranked <- talk_dat %>% spread(year, total_hs, drop = TRUE) %>%
            hs_18 = `2018`) %>% 
     mutate(rank_06 = trunc(rank(-hs_06, ties.method = "min")), 
            rank_18 = trunc(rank(-hs_18, ties.method = "min"))) %>%
+    mutate(common_name = stringr::str_replace(common_name, " HS", "")) %>%
     arrange(rank_06) %>%
     select(-c(govern, school_id, hs_06, hs_18))
 ```
@@ -116,6 +119,7 @@ ranked %>% filter(rank_06 <= 15)  %>%
     gather(key = rank_yr, 
            value = ranking, 
            -common_name) %>%
+   
     ggplot(aes(x = fct_rev(common_name), 
                y = ranking, 
                color = rank_yr)) + 
