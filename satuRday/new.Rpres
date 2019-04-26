@@ -145,7 +145,7 @@ ranked %>% filter(rank_06 <= 15)  %>%
                y = ranking, 
                color = rank_yr)) + 
     geom_point(position = position_jitter(width = 0, height = 0.6),
-               size = 12) +
+               size = 12, alpha=0.6) +
     coord_flip() + 
     geom_path(aes(group = common_name), 
               size = 2,
