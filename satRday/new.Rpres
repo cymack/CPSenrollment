@@ -66,15 +66,14 @@ talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) + facet_wrap(~ year)
 ```
 
 ```{r by-year distribution plots, echo = FALSE, fig.width = 12, fig.fullwidth = TRUE}
-talk_dat %>% ggplot(aes(x = total_hs, y = ..density..), 
+talk_dat %>% ggplot(aes(x = total_hs, y = ..density..)) +
+    geom_histogram(alpha = 0.5, bins = 20, 
                     fill = "orange", 
-                    color = "orange",
-                    alpha = .5) +
+                    color = "orange") +
     geom_density(size = 2, 
                  alpha = 1.0, 
                  color = "darkviolet") +
     scale_color_hue(l = 45) +
-    geom_histogram(alpha = 0.5, bins = 20) +
     facet_wrap(~ year) +
     labs(x = "\nTotal High School Enrollment") +
     theme(panel.margin = unit(.25, "in")) +
